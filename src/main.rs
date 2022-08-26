@@ -7,7 +7,7 @@ fn fake_main() -> i32 {
     0
 }
 
-fn friendship_ofer(exit_code :&i32) {
+fn friendship_ofer(exit_code: &i32){
     println!("Chlapík zůstal na místě a začal ti nabízet přátelství.");
     println!("a) Odmíneš.");
     println!("b) Uděláš krok k němu.");
@@ -17,7 +17,7 @@ fn friendship_ofer(exit_code :&i32) {
         println!("Vyhrál jsi, neboť to byl kanibal");
         vyhra(&exit_code);
     } else if user_input == "b" {
-        println!("Prohraál jsi");
+        println!("Prohrál jsi");
         prohra(&exit_code);
     }
 }
@@ -28,13 +28,16 @@ fn vyhra(exit_code: &i32) {
     main()
 }
 
+fn prohra(exit_code: &i32) {
+    println!("Prohraál jsi");
+    sleep(Duration::from_millis(10000));
+    exit(*exit_code);
+}
+
 fn boj(exit_code: &i32) {
     println!("Došlo k nějakému souboji. Vše trvalo věčně a spoustu ");
     println!("lidí dělalo zbytečnou práci při zajišťování důkazů při soudním procesu.");
     println!("Stálo to spousty peněz. Zemřel jsi ty a/nebo tvůj protivník vyčerpáním.");
-    println!("Byl zmařen život. Hra končí.");
-    sleep(Duration::from_millis(10000));
-    exit(exit_code);
 }
 
 fn policie(exit_code: &i32) {
@@ -55,27 +58,21 @@ fn main() {
     println!("c) Poodstoupíš krok vzad.");
     println!("");
     let user_input = input("");
-
-    match user_input {
-        // The division was valid
-        
-
+    match user_input.as_str() {
         "a" => {
-            println!("Nezbyla ti žádná voda. Všechnu vypil");
-            println!("Divný člověk je ti vděčný, protože teď vidí, že znáš cenu života.");
-            println!("Divný člověk je teď veselý. Řekne ti, že blízko je studna s vodou.");
-            sleep(Duration::from_millis(10000));
-            exit(exit_code);
+            println!("Umřel jsi nemáš co pít");
+            prohra(&exit_code);
         }
-        "b"  => {
-            println!("Udělal jsi dobře neboť to byl určitě kanibal!");
+        "b" => {
+            println!("Udělal jsi dobře neboť to byl kanibal");
             println!("Začne tě pronásledovat. Co uděláš? (napiš jedno z písmen)");
             println!("a)Utkáš se s ním v souboji");
             println!("b)Utečeš");
             println!("");
             let user_input = input("");
             if user_input == "a" {
-                boj(&exit_code)
+                boj(&exit_code);
+                prohra(&exit_code);
             } else if user_input == "b" {
                 println!(
                     "Udělals dobře jelikož by jsi prohrál, zůstals na svobodě. \
@@ -86,14 +83,20 @@ fn main() {
                 println!("b) Utkáš se s nimi v boji");
                 let user_input = input("");
                 if user_input == "a" {
-                    policie(&exit_code)
+                    policie(&exit_code);
+                    vyhra(&exit_code);
                 } else if user_input == "b" {
-                    boj(&exit_code)
+                    boj(&exit_code);
+                    prohra(&exit_code);
                 }
             }
+        }
         "c" => {
-            friendship_ofer(&exit_code)
-        },
-        _ => println!("God mode activated (:")
-        vyhra(&exit_code);
+            friendship_ofer(&exit_code);
+        }
+        &_ => {
+            println!("Now you are a God.");
+            vyhra(&exit_code);
+        }
+    }
 }
